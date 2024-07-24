@@ -32,11 +32,17 @@ echo "$timestamp, app CPU: $cpu_usage%, app Memory: $mem_usage%" >> $LOG_FILE
 # 로그 로테이션 수행
 logrotate -f $LOG_ROTATE_CONFIG
 
+# 로그 로테이션 결과 확인
+echo "Logrotate results:"
+ls -l /var/log/resource_usage.log*
+
 # 로테이션된 로그 파일을 원격 서버로 전송
 # 새로 생성된 로그 파일을 전송
+echo "Transferring log file: $LOG_FILE"
 scp $LOG_FILE ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}/
 
 # 로테이션된 로그 파일을 전송
 for log_file in $(find /var/log -name "resource_usage.log.*" ! -name "resource_usage.log"); do
+    echo "Transferring log file: $log_file"
     scp $log_file ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}/
 done
