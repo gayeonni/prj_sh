@@ -28,10 +28,10 @@ fi
 mkdir -p $SERVER_DIR
 
 # 로그 파일에 기록
-echo "$timestamp, app CPU: $cpu_usage%, app Memory: $mem_usage%" >> $LOG_FILE
+echo "$timestamp, app CPU: $cpu_usage%, app Memory: $mem_usage%" | sudo tee -a $LOG_FILE
 
 # 로그 로테이션 수행
-logrotate -f $LOG_ROTATE_CONFIG
+sudo logrotate -f $LOG_ROTATE_CONFIG
 
 # 로테이션된 로그 파일을 원격 서버로 전송
 # 새로 생성된 로그 파일을 전송
