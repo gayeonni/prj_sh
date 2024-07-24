@@ -22,4 +22,4 @@ fi
 echo "$timestamp, app CPU: $cpu_usage%, app Memory: $mem_usage%" >> $LOG_FILE
 
 # 로그 파일을 원격 서버로 전송
-scp $LOG_FILE user@a-log:/home/ubuntu/logs-1
+scp -v $LOG_FILE ubuntu@10.0.1.59:/home/ubuntu/logs-1
