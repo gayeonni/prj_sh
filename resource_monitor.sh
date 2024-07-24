@@ -2,6 +2,12 @@
 
 # 리소스 사용량을 기록할 로그 파일
 LOG_FILE="/var/log/resource_usage.log"
+LOG_ROTATE_CONFIG="/etc/logrotate.d/resource_usage"
+
+# 원격 서버 설정
+REMOTE_USER="ubuntu"
+REMOTE_HOST="10.0.1.59"
+REMOTE_PATH="/home/ubuntu/logs-1"
 
 # 현재 날짜 및 시간
 timestamp=$(date '+%Y-%m-%d %H:%M:%S')
@@ -21,4 +27,14 @@ fi
 # 로그 파일에 기록
 echo "$timestamp, app CPU: $cpu_usage%, app Memory: $mem_usage%" >> $LOG_FILE
 
-# 로그 파일을 원격 서버로 전송하는 부분 제거
+# 로그 로테이션 수행
+logrotate -f $LOG_ROTATE_CONFIG
+
+# 로테이션된 로그 파일을 원격 서버로 전송
+# 새로 생성된 로그 파일을 전송
+scp $LOG_FILE ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}
+
+# 로테이션된 로그 파일을 전송
+for log_file in $(find /var/log -name 'resource_usage.log.*' ! -name 'resource_usage.log'); do
+    scp $log_file ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}
+done
