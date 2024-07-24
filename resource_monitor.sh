@@ -9,7 +9,7 @@ timestamp=$(date '+%Y-%m-%d %H:%M:%S')
 # 애플리케이션 프로세스 ID 찾기 (JAR 파일 기준)
 app_pid=$(ps -ef | grep '[j]ava -jar /home/ubuntu/inclass-spring-security-0.0.1-SNAPSHOT.jar' | awk '{print $2}' | head -n 1)
 
-if [ -n "$app_pid" ]; then
+if [ -n "$app_pid" ] && [ "$app_pid" -gt 0 ]; then
     # app의 CPU 및 메모리 사용량
     cpu_usage=$(ps -p $app_pid -o %cpu=)
     mem_usage=$(ps -p $app_pid -o %mem=)
