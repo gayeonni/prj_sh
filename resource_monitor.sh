@@ -1,8 +1,8 @@
 #!/bin/bash
 
 LOG_FILE="/var/log/resource_usage.log"
-REMOTE_LOG_SERVER="a-log"
-REMOTE_LOG_PATH="/path/on/remote/server/"
+REMOTE_LOG_SERVER="10.0.1.59"
+REMOTE_LOG_PATH="/home/ubuntu/logs-1"
 
 # 현재 날짜 및 시간
 timestamp=$(date '+%Y-%m-%d %H:%M:%S')
