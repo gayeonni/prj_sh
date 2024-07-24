@@ -1,7 +1,8 @@
 #!/bin/bash
 
-SERVER_DIR="/var/log"
-LOG_FILE="${SERVER_DIR}/resource_usage_${HOSTNAME}.log"
+# 홈 디렉토리 아래의 로그 파일
+USER_LOG_DIR="/home/ubuntu/logs"
+LOG_FILE="${USER_LOG_DIR}/resource_usage_${HOSTNAME}.log"
 LOG_ROTATE_CONFIG="/etc/logrotate.d/resource_usage"
 
 # 원격 서버 설정
@@ -24,20 +25,20 @@ else
     mem_usage="N/A"
 fi
 
-# 서버별 디렉토리 생성
-mkdir -p $SERVER_DIR
+# 사용자 디렉토리 아래의 로그 디렉토리 생성
+mkdir -p $USER_LOG_DIR
 
 # 로그 파일에 기록
-echo "$timestamp, app CPU: $cpu_usage%, app Memory: $mem_usage%" | sudo tee -a $LOG_FILE
+echo "$timestamp, app CPU: $cpu_usage%, app Memory: $mem_usage%" >> $LOG_FILE
 
 # 로그 로테이션 수행
-sudo logrotate -f $LOG_ROTATE_CONFIG
+logrotate -f $LOG_ROTATE_CONFIG
 
 # 로테이션된 로그 파일을 원격 서버로 전송
 # 새로 생성된 로그 파일을 전송
 scp $LOG_FILE ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}/${HOSTNAME}/
 
 # 로테이션된 로그 파일을 전송
-for log_file in $(find /var/log -name "resource_usage_${HOSTNAME}.log.*" ! -name "resource_usage_${HOSTNAME}.log"); do
+for log_file in $(find $USER_LOG_DIR -name "resource_usage_${HOSTNAME}.log.*" ! -name "resource_usage_${HOSTNAME}.log"); do
     scp $log_file ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}/${HOSTNAME}/
 done
