@@ -1,6 +1,8 @@
 #!/bin/bash
 
 LOG_FILE="/var/log/resource_usage.log"
+REMOTE_LOG_SERVER="a-log"
+REMOTE_LOG_PATH="/path/on/remote/server/"
 
 # 현재 날짜 및 시간
 timestamp=$(date '+%Y-%m-%d %H:%M:%S')
@@ -29,3 +31,6 @@ fi
 
 # 로그 파일에 기록
 echo "$timestamp, app CPU: $cpu_usage%, app Memory: $mem_usage%, app2 CPU: $cpu_usage2%, app2 Memory: $mem_usage2%" >> $LOG_FILE
+
+# 로그 파일을 원격 서버로 전송
+scp $LOG_FILE user@$REMOTE_LOG_SERVER:$REMOTE_LOG_PATH
