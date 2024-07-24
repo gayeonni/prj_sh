@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# 서버별 디렉토리 생성
-SERVER_DIR="/home/ubuntu/logs-1/${HOSTNAME}"
+SERVER_DIR="/var/log"
 
 # 리소스 사용량을 기록할 로그 파일
 LOG_FILE="${SERVER_DIR}/resource_usage.log"
@@ -27,9 +26,6 @@ else
     mem_usage="N/A"
 fi
 
-# 서버별 디렉토리 생성
-mkdir -p $SERVER_DIR
-
 # 로그 파일에 기록
 echo "$timestamp, app CPU: $cpu_usage%, app Memory: $mem_usage%" >> $LOG_FILE
 
@@ -38,9 +34,9 @@ logrotate -f $LOG_ROTATE_CONFIG
 
 # 로테이션된 로그 파일을 원격 서버로 전송
 # 새로 생성된 로그 파일을 전송
-scp $LOG_FILE ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}/${HOSTNAME}/
+scp $LOG_FILE ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}/
 
 # 로테이션된 로그 파일을 전송
-for log_file in $(find /var/log -name "resource_usage.log.*" -path "/var/log/${HOSTNAME}/*" ! -name "resource_usage.log"); do
-    scp $log_file ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}/${HOSTNAME}/
+for log_file in $(find /var/log -name "resource_usage.log.*" ! -name "resource_usage.log"); do
+    scp $log_file ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}/
 done
