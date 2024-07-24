@@ -21,5 +21,4 @@ fi
 # 로그 파일에 기록
 echo "$timestamp, app CPU: $cpu_usage%, app Memory: $mem_usage%" >> $LOG_FILE
 
-# 로그 파일을 원격 서버로 전송
-scp -v $LOG_FILE ubuntu@10.0.1.59:/home/ubuntu/logs-1
+# 로그 파일을 원격 서버로 전송하는 부분 제거
