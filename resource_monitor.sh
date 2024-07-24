@@ -3,7 +3,7 @@
 # 홈 디렉토리 아래의 로그 파일
 USER_LOG_DIR="/home/ubuntu/logs"
 LOG_FILE="${USER_LOG_DIR}/resource_usage_${HOSTNAME}.log"
-LOG_ROTATE_CONFIG="/etc/logrotate.d/resource_usage"
+LOG_ROTATE_CONFIG="/home/ubuntu/logrotate.conf"
 
 # 원격 서버 설정
 REMOTE_USER="ubuntu"
@@ -30,6 +30,18 @@ mkdir -p $USER_LOG_DIR
 
 # 로그 파일에 기록
 echo "$timestamp, app CPU: $cpu_usage%, app Memory: $mem_usage%" >> $LOG_FILE
+
+# 사용자 홈 디렉토리에 로그 로테이션 설정 파일 생성
+cat <<EOF > $LOG_ROTATE_CONFIG
+$USER_LOG_DIR/resource_usage_*.log {
+    daily
+    rotate 7
+    compress
+    missingok
+    notifempty
+    create 0644 ubuntu ubuntu
+}
+EOF
 
 # 로그 로테이션 수행
 logrotate -f $LOG_ROTATE_CONFIG
